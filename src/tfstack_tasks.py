@@ -36,6 +36,8 @@ def create_tf_stack_task(tf_dir):
     Returns:
         dict : containing message of status of succesful terraform apply, including the new stack/resource id.
     """
+    script_errors=['error:ExistingWorkspaceContainsResources']
+
     try:
         print(id)
         cmd = './create_tfstack.sh'
@@ -52,6 +54,7 @@ def create_tf_stack_task(tf_dir):
     piped_output = ''
     resource_id_line = ''
     error_line = ''
+
     while True:
         line = process.stdout.readline()
         if not line:
@@ -63,8 +66,10 @@ def create_tf_stack_task(tf_dir):
         if line_stripped is not None:
             if 'resource_id' in line_stripped:
                 resource_id_line = line_stripped
-            if 'error:ExistingWorkspaceContainsResources' in line_stripped:
-                error_line = line_stripped
+            for i in script_errors:
+                if i in line_stripped:
+                    error_line = i
+                    break
 
     process.wait()
     # evaluate script process
@@ -109,6 +114,8 @@ def delete_tf_stack_task(tf_dir, id):
     Returns:
         dict : containing message of status of succesful terraform operation
     """
+    script_errors=['error:IdNotSpecified','error:WorkspaceNotExist']
+
     try:
         print(id)
         cmd = './delete_tfstack.sh' + ' ' + id
@@ -118,30 +125,45 @@ def delete_tf_stack_task(tf_dir, id):
                                    executable='/bin/sh',
                                    cwd=tf_dir,
                                    stdout=subprocess.PIPE)
-        piped_output = ''
-        while True:
-            line = process.stdout.readline()
-            if not line:
-                break
-            line_stripped = line.decode('utf8', errors='strict').strip()
-            print(line_stripped)
-            piped_output += line_stripped
-
-        process.wait()
-        if process.returncode == 0:
-            message = {
-                'message': "TFstack" + " deleted succesfully",
-            }
-            return message
-        else:
-            error_message = {
-                'message': "TFstack" + " deleted unsuccesfully",
-            }
-            raise Exception(error_message)
-
     except Exception:
-        error_message = "Encountered an backend Exception. Unable to execute Terraform"
+        error_message = "Encountered an backend error. Unable to execute Terraform executor"
         raise Exception(error_message)
+
+    # process output
+    piped_output = ''
+    error_line = ''
+
+    while True:
+        line = process.stdout.readline()
+        if not line:
+            break
+        line_stripped = line.decode('utf8', errors='strict').strip()
+        print(line_stripped)
+        piped_output += line_stripped
+        # catch particular messages
+        if line_stripped is not None:
+            for i in script_errors:
+                if i in line_stripped:
+                    error_line = i
+                    break
+
+    process.wait()
+    # evaluate script process
+    if process.returncode == 0:
+        message = {
+            'message': "TFstack" + " deleted succesfully",
+        }
+        return message
+    else:
+        if error_line:
+            message = {
+                'message': error_line,
+            }
+        else:
+            message = {
+                'message': "Unknown error occured during execution of Terraform executor",
+            }
+        raise Exception(message)
 
 
 @celery.task(name="read_tf_stack_task")
@@ -163,6 +185,8 @@ def read_tf_stack_task(tf_dir, id):
     Returns:
         dict : containing message of status of succesful terraform operation, including result
     """
+    script_errors=['error:IdNotSpecified','error:WorkspaceNotExist']
+
     try:
         print(id)
         cmd = './read_tfstack.sh' + ' ' + id
@@ -172,28 +196,45 @@ def read_tf_stack_task(tf_dir, id):
                                    executable='/bin/sh',
                                    cwd=tf_dir,
                                    stdout=subprocess.PIPE)
-        piped_output = ''
-        while True:
-            line = process.stdout.readline()
-            if not line:
-                break
-            line_stripped = line.decode('utf8', errors='strict').strip()
-            print(line_stripped)
-            piped_output += line_stripped
-
-        process.wait()
-        if process.returncode == 0:
-            message = {
-                'message': "TFstack" + " read succesfully",
-                'content': piped_output
-            }
-            return message
-        else:
-            error_message = {
-                'message': "TFstack" + " read unsuccesfully",
-            }
-            raise Exception(error_message)
-
     except Exception:
-        error_message = "Encountered an backend Exception. Unable to execute Terraform"
+        error_message = "Encountered an backend error. Unable to execute Terraform executor"
         raise Exception(error_message)
+
+    # process output
+    piped_output = ''
+    error_line = ''
+
+    while True:
+        line = process.stdout.readline()
+        if not line:
+            break
+        line_stripped = line.decode('utf8', errors='strict').strip()
+        print(line_stripped)
+        piped_output += line_stripped
+        # catch particular messages
+        if line_stripped is not None:
+            for i in script_errors:
+                if i in line_stripped:
+                    error_line = i
+                    break
+
+    process.wait()
+    # evaluate script process
+    if process.returncode == 0:
+        message = {
+            'message': "TFstack" + " read succesfully",
+            'content': piped_output
+        }
+        return message
+    else:
+        if error_line:
+            message = {
+                'message': error_line,
+            }
+        else:
+            message = {
+                'message': "Unknown error occured during execution of Terraform executor",
+            }
+        raise Exception(message)
+
+
