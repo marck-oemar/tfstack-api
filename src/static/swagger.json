@@ -1,0 +1,80 @@
+openapi: 3.0.1
+info:
+  title: tf-stacks-crud
+  description: tf-stacks-crud
+  version: '0.1'
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /tfstacks:
+    post:
+      description: Create a new terraform stack
+      responses:
+        '500':
+          description: Error      
+        '201':
+          description: Succesful
+      servers:
+        - url: 'http://localhost:8080'
+    servers:
+      - url: 'http://localhost:8080'
+
+  /tfstacks/{id}:
+    get:
+      description: read a terraform stack based on id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the terraform stack
+          schema:
+            type: string
+      responses:
+        '500':
+          description: Error
+        '200':
+          description: Success
+      servers:
+        - url: 'http://localhost:8080'
+    delete:
+      description: delete a terraform stack based on id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the terraform stack
+          schema:
+            type: string
+      responses:
+        '500':
+          description: Error
+        '200':
+          description: Success
+      servers:
+        - url: 'http://localhost:8080'
+    servers:
+      - url: 'http://localhost:8080'
+
+
+
+
+  /tfstacks/requests/{request_id}:
+    get:
+      description: get the status of a requested operation on the tfstacks resource
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          description: request id that was given
+          schema:
+            type: string      
+      responses:
+        '500':
+          description: Error      
+        '201':
+          description: Succesful
+      servers:
+        - url: 'http://localhost:8080'
+    servers:
+      - url: 'http://localhost:8080'
+

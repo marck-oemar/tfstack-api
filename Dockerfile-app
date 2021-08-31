@@ -1,0 +1,24 @@
+FROM python:3.7-alpine
+
+RUN apk --no-cache add curl git
+
+ENV TERRAFORM_VERSION 1.0.2 
+
+RUN cd /usr/local/bin && \
+    curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+
+COPY ./src /app
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir -r ./requirements.txt
+
+ADD https://api.github.com/repos/marck-oemar/tf-compute-example/git/refs/heads/main /git-clone-version/github-version.json
+RUN git clone --depth 1 --branch main https://github.com/marck-oemar/tf-compute-example.git /cloned-tf
+
+ENV TF_DIR /cloned-tf
+
+CMD [ "python", "./app.py" ]

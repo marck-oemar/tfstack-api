@@ -1,0 +1,35 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+
+
+# known files created by terraform modules
+id_rsa*
+kube_config*
+
+# vagrant files
+.vagrant/
+vagrant/local_config.yaml
+
+# MacOS junk
+.DS_Store
+
+.pytest_cache
+
+yarn.lock 
+
+.yarn-integrity
+
+.terraform.lock.hcl 
+
+__pycache__
+
+#
+**/cloned_tf/*

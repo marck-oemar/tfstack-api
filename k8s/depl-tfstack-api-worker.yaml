@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: "default"
+  name: tfstack-api-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tfstack-api-worker
+  template:
+    metadata:
+      annotations:
+        force_rollout_commit: "<COMMIT>" # because we only use latest of image, we must force rollout.
+      labels:
+        app: tfstack-api-worker
+    spec:
+      containers:
+        - name: tfstack-api-worker
+          image: elmoenco/tfstack-api-worker:latest # We're not using image tag versions, only latest
+          imagePullPolicy: Always
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: CELERY_BROKER_URL
+              value: redis://redis:6379
+            - name: CELERY_RESULT_BACKEND
+              value: redis://redis:6379
+            - name: WORKER_CONCURRENCY
+              value: 5
+          volumeMounts:
+            - name: aws-credentials
+              mountPath: "/root/.aws" # will create a file called credentials
+              readOnly: true
+      volumes:
+        - name: aws-credentials
+          secret:
+            secretName: aws-credentials

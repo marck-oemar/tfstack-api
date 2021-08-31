@@ -1,0 +1,6 @@
+flask
+flask_cors
+flask_swagger_ui
+celery==4.4.7
+redis==3.5.3
+flower==0.9.7
