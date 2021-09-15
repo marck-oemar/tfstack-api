@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "tfstack-api.fullname" . }}-app-ingress
+  labels:
+  {{- include "tfstack-api.labels" . | nindent 4 }}
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: tfstack-api-app
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix

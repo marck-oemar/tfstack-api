@@ -5,15 +5,15 @@ metadata:
   name: tfstack-api-app-ingress
 spec:
   rules:
-  - http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: tfstack-api-app
-            port:
-              number: 8080
+    - http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: tfstack-api-app
+                port:
+                  number: 8080
 
 ---
 apiVersion: v1
@@ -43,8 +43,6 @@ spec:
       app: tfstack-api-app
   template:
     metadata:
-      annotations:
-        force_rollout_commit: "<COMMIT>" # because we only use latest of image, we must force rollout.
       labels:
         app: tfstack-api-app
     spec:

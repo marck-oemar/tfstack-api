@@ -80,16 +80,23 @@ In the Terraform config repo, adjust the Terraform Backend S3 config.
 ### Build
 Since we're deploying Kubernetes objects, Use ```docker build``` build the 2 container images for the App and the Worker, tag and push them to a container registry to your liking, for instance DockerHub
 
-### Deploy
-Create a Kubernetes Secret for the AWS credentials: 
+### Deploy in Kubernetes Cluster
+
+Kubernetes deployment is available in manifests and a local helm chart. 
+- The images point to my public 'elmoenco' dockerhub registry.
+- The Kubernetes deployment expects an ingress controller. 
+- We need proper AWS credentials.
+
+First, create a Kubernetes Secret for the AWS credentials: 
 
 ```
 kubectl create secret generic aws-credentials --from-file=.aws/credentials
 ```
 
-Use ```kubectl apply``` to deploy the Kubernetes objects, preferably in order: Redis - Worker - App
+Deploy:
+1. Use ```kubectl apply``` to deploy the Kubernetes manifests or 
+2. Or ```helm upgrade --install tfstack-api tfstack-api/
 
-Since the Kubernetes manifest does not include an Ingress, deploy your own Ingress or use ```kubectl forward``` to expose the tfstack-api-app on port 8080.
 
 ### Discover
-Browse to <exposed url>:8080/swagger to discover and try out the API.
+Access <the ingress endpoint>/swagger to discover and try out the API.

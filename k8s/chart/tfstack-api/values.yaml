@@ -1,0 +1,26 @@
+app:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  replicas: 1
+  type: ClusterIP
+image:
+  redis:
+    repository: redis
+    tag: 6-alpine
+  tfstackApiApp:
+    repository: elmoenco/tfstack-api-app
+    tag: latest
+  tfstackApiWorker:
+    repository: elmoenco/tfstack-api-worker
+    tag: latest
+redis:
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: 6379
+  replicas: 1
+  type: ClusterIP
+worker:
+  replicas: 1

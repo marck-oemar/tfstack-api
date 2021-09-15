@@ -11,8 +11,6 @@ spec:
       app: tfstack-api-worker
   template:
     metadata:
-      annotations:
-        force_rollout_commit: "<COMMIT>" # because we only use latest of image, we must force rollout.
       labels:
         app: tfstack-api-worker
     spec:
