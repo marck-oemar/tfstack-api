@@ -95,7 +95,7 @@ kubectl create secret generic aws-credentials --from-file=.aws/credentials
 
 Deploy:
 1. Use ```kubectl apply``` to deploy the Kubernetes manifests or 
-2. Or ```helm upgrade --install tfstack-api tfstack-api/
+2. Or ```helm upgrade --install tfstack-api tfstack-api/``` to install helm chart
 
 
 ### Discover
