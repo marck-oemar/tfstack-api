@@ -1,4 +1,4 @@
-- [ ] convert kubernetes specs to helm chart
+- [X] convert kubernetes specs to helm chart
 - [ ] wsgi
 - [ ] production grade backend
 
