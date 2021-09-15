@@ -99,4 +99,4 @@ Deploy:
 
 
 ### Discover
-Access <the ingress endpoint>/swagger to discover and try out the API.
+Access the (ingress endpoint)/swagger to discover and try out the API.
