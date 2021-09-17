@@ -1,4 +1,12 @@
+
+- [X] Decouple ugly tasks
+
+- [ ] Unit tests
+
+- [ ] Github actions pipeline
+
 - [X] convert kubernetes specs to helm chart
+
 - [ ] wsgi
 - [ ] production grade backend
 

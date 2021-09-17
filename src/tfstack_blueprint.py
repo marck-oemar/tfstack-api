@@ -22,7 +22,7 @@ def create_tf_stack():
        This is the Create operation, which results in a terraform apply
        of a new terraform stack, using a unique terraform state.
        The uniqueness is determined by the Terraform shell scripts that
-       uses a randomly generated 'stack id'
+       uses a randomly generated 'resource_id'
 
        Creates the related async Celery task.
 
@@ -34,35 +34,37 @@ def create_tf_stack():
     return jsonify({"request_id": celery_task.id}), 202
 
 
-@tfstack_blueprint.route('/tfstacks/<id>', methods=['GET'])
-def read_tf_stack(id):
+@tfstack_blueprint.route('/tfstacks/<resource_id>', methods=['GET'])
+def read_tf_stack(resource_id):
     """Flask blueprint.
        This is the Read operation, which results in a terraform state list
        of an existing terraform stack/state.
-       
+
        Creates the related async Celery task.
 
     Returns:
         json: json datastructure
     """
     tf_dir = current_app.config['TF_DIR']
-    celery_task = read_tf_stack_task.delay(tf_dir=tf_dir, id=id)
+    celery_task = read_tf_stack_task.delay(
+        tf_dir=tf_dir, resource_id=resource_id)
     return jsonify({"request_id": celery_task.id}), 202
 
 
-@tfstack_blueprint.route('/tfstacks/<id>', methods=['DELETE'])
-def delete_tf_stack(id):
+@tfstack_blueprint.route('/tfstacks/<resource_id>', methods=['DELETE'])
+def delete_tf_stack(resource_id):
     """Flask blueprint.
        This is the Delete operation, which results in a terraform destroy
        of an existing terraform stack/state.
-       
+
        Creates the related async Celery task.
 
     Returns:
         json: json datastructure
     """
     tf_dir = current_app.config['TF_DIR']
-    celery_task = delete_tf_stack_task.delay(tf_dir=tf_dir, id=id)
+    celery_task = delete_tf_stack_task.delay(
+        tf_dir=tf_dir, resource_id=resource_id)
     return jsonify({"request_id": celery_task.id}), 202
 
 
@@ -70,7 +72,7 @@ def delete_tf_stack(id):
 def tfstacks_requests_AsyncResult(request_id):
     """Flask blueprint.
        Retrieves the status of a created async Celery task.
-       
+
     Returns:
         json: json datastructure of the result
     """

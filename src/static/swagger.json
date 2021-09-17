@@ -19,14 +19,14 @@ paths:
     servers:
       - url: 'http://localhost:8080'
 
-  /tfstacks/{id}:
+  /tfstacks/{resource_id}:
     get:
-      description: read a terraform stack based on id
+      description: read a terraform stack based on resource_id
       parameters:
-        - name: id
+        - name: resource_id
           in: path
           required: true
-          description: The ID of the terraform stack
+          description: The resource_id of the terraform stack
           schema:
             type: string
       responses:
@@ -37,12 +37,12 @@ paths:
       servers:
         - url: 'http://localhost:8080'
     delete:
-      description: delete a terraform stack based on id
+      description: delete a terraform stack based on resource_id
       parameters:
-        - name: id
+        - name: resource_id
           in: path
           required: true
-          description: The ID of the terraform stack
+          description: The resource_id of the terraform stack
           schema:
             type: string
       responses:
