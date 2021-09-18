@@ -100,3 +100,16 @@ Deploy:
 
 ### Discover
 Access the (ingress endpoint)/swagger to discover and try out the API.
+
+
+## Test
+To execute the unittests:
+
+
+```
+cd src
+pip3 install -r requirements.txt
+python3 -m unittest discover -v
+```
+
+

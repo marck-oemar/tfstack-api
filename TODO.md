@@ -1,7 +1,7 @@
 
 - [X] Decouple ugly tasks
 
-- [ ] Unit tests
+- [X] Unit tests
 
 - [ ] Github actions pipeline
 
