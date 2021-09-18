@@ -1,8 +1,20 @@
 import re
 import subprocess
+from utils import get_logger
 
 
 def parse_process_output(process: subprocess.Popen):
+    """
+    Parses and print output from subprocess.Popen
+
+    Args:
+        process (subprocess.Popen): subprocess.Popen
+
+    Returns:
+        list: output from process
+    """
+    logger = get_logger()
+
     # process output
     piped_output = list()
     resource_id_line = ''
@@ -14,7 +26,7 @@ def parse_process_output(process: subprocess.Popen):
         if not line:
             break
         line_stripped = line.decode('utf8', errors='strict').strip()
-        print(line_stripped)
+        logger.info(line_stripped)
         piped_output.append(line_stripped)
 
     process.wait()
@@ -22,6 +34,16 @@ def parse_process_output(process: subprocess.Popen):
 
 
 def grep_script_error(process_output: list, script_errors: list):
+    """
+    Grep a script error
+
+    Args:
+        process_output (list): 
+        script_errors (list): 
+
+    Returns:
+        [type]: Returns the first found string of error or None
+    """
     # loop through the output lines
     for line in process_output:
         for i in script_errors:
@@ -31,6 +53,16 @@ def grep_script_error(process_output: list, script_errors: list):
 
 
 def grep_resource_id(process_output: list, resource_id_grep_pattern: str):
+    """
+    Grep resource_id from terraform output
+
+    Args:
+        process_output (list): 
+        resource_id_grep_pattern (str): 
+
+    Returns:
+        str: resource id
+    """
     # loop through the output lines
 
     resource_id_line = None
@@ -41,6 +73,7 @@ def grep_resource_id(process_output: list, resource_id_grep_pattern: str):
     if not resource_id_line:
         return None
 
+    # specific terraform output
     regex_result_list = re.findall('"([^"]*)"', resource_id_line)
     if len(regex_result_list) != 1:
         return None
@@ -74,8 +107,10 @@ def create_tf_stack(tf_dir):
 
 
     Returns:
-        str: 'message': "TFstack deleted succesfully"
+        str: 'message': "TFstack created succesfully"
     """
+    logger = get_logger()
+
     script_errors = ['error:ExistingWorkspaceContainsResources']
 
     try:
@@ -91,7 +126,7 @@ def create_tf_stack(tf_dir):
 
     # process output
     process_output = parse_process_output(process)
-    print(process_output)
+    logger.info(process_output)
     # evaluate script process
     if process.returncode == 0:
         resource_id = grep_resource_id(
@@ -137,10 +172,12 @@ def delete_tf_stack(tf_dir: str, resource_id: str):
     Returns:
         str: "TFstack" + " deleted succesfully"
     """
+    logger = get_logger()
+
     script_errors = ['error:IdNotSpecified', 'error:WorkspaceNotExist']
 
     try:
-        print(id)
+        logger.info(id)
         cmd = './delete_tfstack.sh' + ' ' + resource_id
 
         process = subprocess.Popen(cmd,
@@ -192,11 +229,12 @@ def read_tf_stack(tf_dir: str, resource_id: str):
     Returns:
         dict : containing message of status of succesful terraform operation, including result
     """
+    logger = get_logger()
 
     script_errors = ['error:IdNotSpecified', 'error:WorkspaceNotExist']
 
     try:
-        print(id)
+        logger.info(id)
         cmd = './read_tfstack.sh' + ' ' + resource_id
 
         process = subprocess.Popen(cmd,

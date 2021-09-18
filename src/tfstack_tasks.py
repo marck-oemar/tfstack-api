@@ -7,6 +7,8 @@ from celery import Celery, Task, states, current_task
 from celery.exceptions import Ignore
 
 from tfstack_executors import create_tf_stack, delete_tf_stack, read_tf_stack
+from utils import get_logger
+
 
 """Celery app and tasks that are used by both the Flask app and the Celery worker(s)
 """

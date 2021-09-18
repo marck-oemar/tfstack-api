@@ -10,6 +10,8 @@ import json
 import subprocess
 
 from tfstack_blueprint import tfstack_blueprint
+from utils import get_logger
+
 
 def create_app(tf_dir):
     """creates the flask app with the needed blueprints including swaggerui

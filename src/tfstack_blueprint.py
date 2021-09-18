@@ -2,6 +2,8 @@ import subprocess
 from flask import current_app, render_template, Blueprint, jsonify, request
 
 from tfstack_tasks import create_tf_stack_task, delete_tf_stack_task, read_tf_stack_task
+from utils import get_logger
+
 
 tfstack_blueprint = Blueprint('ec2instance_blueprint', __name__)
 
