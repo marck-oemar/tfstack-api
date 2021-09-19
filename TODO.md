@@ -3,7 +3,7 @@
 
 - [X] Unit tests
 
-- [ ] Github actions pipeline
+- [X] Github actions pipeline
 
 - [X] convert kubernetes specs to helm chart
 
